@@ -6,15 +6,18 @@
 
 #ifdef __APPLE__
 #include "offscreen-old/OffscreenContextNSOpenGL.h"
+#include "OffscreenContextCGL.h"
 #endif
 #ifdef _WIN32
 #include "offscreen-old/OffscreenContextWGL.h"
+#include "OffscreenContextWGL.h"
 #endif
 #ifdef ENABLE_EGL
 #include "offscreen-old/OffscreenContextEGL.h"
 #endif
 #ifdef ENABLE_GLX
 #include "offscreen-old/OffscreenContextGLX.h"
+#include "OffscreenContextGLX.h"
 #endif
 #ifdef NULLGL
 #include "OffscreenContextNULL.h"
@@ -36,7 +39,7 @@ const char *defaultProvider() {
   return "glx-old";
 #endif
 #ifdef _WIN32
-  return "wgl-old";
+  return "wgl";
 #endif
 #endif  // NULLGL
 }
@@ -52,6 +55,8 @@ std::shared_ptr<OpenGLContext> create(const std::string& provider, const Offscre
 #ifdef __APPLE__
   if (provider == "nsopengl-old") {
     return offscreen_old::CreateOffscreenContextNSOpenGL(attrib.width, attrib.height, attrib.majorGLVersion, attrib.minorGLVersion);
+  } else if (provider == "cgl") {
+    return CreateOffscreenContextCGL(attrib.width, attrib.height, attrib.majorGLVersion, attrib.minorGLVersion);
   }
 #endif
 #if ENABLE_EGL
@@ -66,6 +71,9 @@ std::shared_ptr<OpenGLContext> create(const std::string& provider, const Offscre
   if (provider == "glx-old") {
    return offscreen_old::CreateOffscreenContextGLX(attrib.width, attrib.height, attrib.majorGLVersion, attrib.minorGLVersion, 
                                     attrib.gles, attrib.compatibilityProfile);
+  } else if (provider == "glx") {
+   return CreateOffscreenContextGLX(attrib.width, attrib.height, attrib.majorGLVersion, attrib.minorGLVersion, 
+                                    attrib.gles, attrib.compatibilityProfile);
   }
 #endif
 #ifdef _WIN32
@@ -73,6 +81,10 @@ std::shared_ptr<OpenGLContext> create(const std::string& provider, const Offscre
     return offscreen_old::CreateOffscreenContextWGL(attrib.width, attrib.height,
 						    attrib.majorGLVersion, attrib.minorGLVersion,
 						    attrib.compatibilityProfile);
+  } else if (provider == "wgl") {
+    return CreateOffscreenContextWGL(attrib.width, attrib.height,
+				     attrib.majorGLVersion, attrib.minorGLVersion,
+                                     attrib.compatibilityProfile);
   }
   else
 #endif
