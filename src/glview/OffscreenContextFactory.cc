@@ -14,6 +14,7 @@
 #endif
 #ifdef ENABLE_EGL
 #include "offscreen-old/OffscreenContextEGL.h"
+#include "OffscreenContextEGL.h"
 #endif
 #ifdef ENABLE_GLX
 #include "offscreen-old/OffscreenContextGLX.h"
@@ -39,7 +40,7 @@ const char *defaultProvider() {
   return "glx-old";
 #endif
 #ifdef _WIN32
-  return "wgl";
+  return "wgl-old";
 #endif
 #endif  // NULLGL
 }
@@ -64,6 +65,10 @@ std::shared_ptr<OpenGLContext> create(const std::string& provider, const Offscre
     return offscreen_old::CreateOffscreenContextEGL(attrib.width, attrib.height,
                                                     attrib.majorGLVersion, attrib.minorGLVersion,
                                                     attrib.gles, attrib.compatibilityProfile, attrib.gpu);
+  } else if (provider == "egl") {
+    return CreateOffscreenContextEGL(attrib.width, attrib.height,
+                                     attrib.majorGLVersion, attrib.minorGLVersion,
+                                     attrib.gles, attrib.compatibilityProfile, attrib.gpu);
   }
   else
 #endif
