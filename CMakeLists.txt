@@ -565,7 +565,7 @@ elseif(UNIX)
           src/glview/offscreen-old/OffscreenContextGLX.cc
           src/glview/OffscreenContextGLX.cc)
       find_library(X11_LIBRARY X11)
-      target_link_libraries(OpenSCAD PRIVATE ${X11_LIBRARY} dl)
+      target_link_libraries(OpenSCAD PRIVATE ${X11_LIBRARY} ${CMAKE_DL_LIBS})
     endif()
   endif()
 elseif(WIN32)
